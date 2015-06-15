@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <title>Dashboard EDF</title>
+
+  <!-- CSS ressources-->
+  <link href="css/hover.css" rel="stylesheet" media="all">
+  <link href="css/bootstrap.css" rel="stylesheet">
+  <link href="css/dashboard.css" rel="stylesheet"> 
+
+  <!-- datepicker CSS -->
+  <link rel="stylesheet" type="text/css" media="all" href="css/font-awesome.min.css">
+  <link rel="stylesheet" type="text/css" media="all" href="css/daterangepicker-bs3.css">
+
+  <!-- Js local ressources-->
+  <script language="javascript" type="text/javascript" src="js/adhoc-visualization-api.js"></script> <!-- Artemis API -->
+  <script language="javascript" type="text/javascript" src="js/jquery-1.11.3.min.js"></script>  <!-- Jquery -->
+  <script language="javascript" type="text/javascript" src="js/bootstrap.min.js"></script>  <!-- Bootstrap -->
+  <script language="javascript" type="text/javascript" src="js/highcharts.js"></script>   <!-- Highcharts -->
+  <script language="javascript" type="text/javascript" src="js/exporting.js"></script>  <!-- Highchart exporting modules -->
+  <script language="javascript" type="text/javascript" src="js/date_time.js"></script>  <!-- Daterangepicker element -->
+  <script language="javascript" type="text/javascript" src="js/adhoc-data-api.js"></script> <!-- Var data -->
+  <script language="javascript" type="text/javascript" src="js/data.js"></script>	  <!-- Project datas -->
+  <script language="javascript" type="text/javascript" src="js/fblikes.js"></script>  <!-- FB api connection -->
+  <script language="javascript" type="text/javascript" src="js/charts.js"></script>    <!-- Project charts -->
+  <script type="text/javascript" src="js/moment.js"></script>  <!-- Time units -->
+  <script type="text/javascript" src="js/daterangepicker.js"></script>  <!-- Daterangepicker -->
+  <script src="js/dynamicdates.js"></script>     <!-- Displaying date -->
+
+</head>
+
+<body>
+
+  <!-- Navbar top & client info-->
+  <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container-fluid" style="padding-top:10px">
+      <div class="navbar-header" >
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <h4 class="page-header">
+          <img src="img/logo.png" class="logo"></img> 
+          <span class="type"> activity overview </span>
+          <b class="date"> <div id="string_datestart" style="display:inline"></div> 
+            <div id="arrow" style="display:none">
+              <b style="color:black">&#8594;</b>
+            </div> <div id="string_dateend" style="display:inline">
+          </div> 
+        </b>
+      </h4>
+    </div>
+
+    <!-- navbar top align right for datepicker-->
+    <div class="navbar-collapse collapse">  
+      <form class="navbar-form navbar-right form-horizontal">
+        <fieldset class="inline">
+          <div class="control-group">
+            <div class="controls">
+              <div class="input-prepend input-group">
+                <span class="add-on input-group-addon"><i class="glyphicon glyphicon-calendar fa fa-calendar"></i></span><input type="text" style="width: 100px" name="datestart" id="datestart" class="form-control"/>
+              </div>
+            </div>
+          </div>
+        </fieldset>
+        <fieldset class="inline">
+          <div class="control-group">
+            <div class="controls">
+              &nbsp;&nbsp;&nbsp;
+              <div class="input-prepend input-group">
+                <span class="add-on input-group-addon"><i class="glyphicon glyphicon-calendar fa fa-calendar"></i></span>
+                <input type="text" style="width: 100px" name="dateend" id="dateend" class="form-control" /> 
+              </div>
+            </div>
+          </div>
+        </fieldset>
+        &nbsp;&nbsp;&nbsp;
+        <button type="button" class="btn btn-default hvr-icon-spin" id="chartform" style="display:inline">
+          &nbsp;&nbsp;&nbsp;&nbsp;
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Circle placeholders -->
+<div class="col-sm-15  col-md-15" style="color:F000000; padding-top: 20px;">
+
+  <!-- Circle placeholder impressions -->
+  <div class="col-sm-3 placeholder">
+
+    <a href="#imp" data-toggle="tab">
+      <div class="circle circle-border-blue hvr-fade shadow">
+        <span  class="score-text-top blue fa fa fa-bullseye padding-left font-pro" style="font-size: 1.5em;" aria-hidden="true"></span><br>
+        <div class="score-text blue padding-left"  id="countx_total_impressions"></div>
+        <h6 class="score-text-bot blue padding-left score-texted" >
+          <span style="font-size:24px">impressions</span><br>
+          <b style="">source : artemis</b>
+        </h6>
+      </div>
+    </a>
+    <br>
+    <br> 
+  </div>
+
+  <!-- Circle placeholder clicks -->
+  <div class="col-sm-3 placeholder pad">
+    <a href="#cli"  data-toggle="tab">
+      <div class="circle circle-border-orange hvr-fade shadow">
+        <span  class="score-text-top orange fa fa-eye padding-left font-pro" style="font-size: 1.5em" aria-hidden="true"></span><br>
+        <div class="score-text orange padding-left" id="countx_total_clicks"></div>
+        <h6 class="score-text-bot orange padding-left score-texted">
+          <span style="font-size:24px">clicks</span>
+          <br>
+          <b>source : artemis</b>
+        </h6>
+      </div>
+    </a>
+    <br>
+    <br> 
+  </div>
+
+  <!-- Circle placeholder All visits -->
+  <div class="col-sm-3 placeholder pad">
+    <a href="#new"  data-toggle="tab">
+      <div class="circle circle-border-blue hvr-fade shadow">
+        <span class="score-text-top blue fa fa-users padding-left font-pro"  aria-hidden="true"></span><br>
+        <div class="score-text blue padding-left" id="countx_total_totalvisits"></div>
+        <h6 class="score-text-bot blue padding-left score-texted">
+          <span style="font-size:24px">visits</span>
+          <br>
+          <b>source : artemis</b>
+        </h6>
+      </div>
+    </a>
+    <br>
+    <br> 
+  </div>
+
+  <!-- Circle placeholder New visits -->
+  <div class="col-sm-3 placeholder pad">
+    <a href="#new" data-toggle="tab">
+      <div class="circle circle-border-orange hvr-fade shadow">
+        <span  class="score-text-top orange fa fa-user padding-left font-pro"  aria-hidden="true"></span><br>
+        <div class="score-text orange padding-left" id="countx_total_newvisits"></div>
+        <h6 class="score-text-bot orange padding-left score-texted">
+          <span style="font-size:24px">new visits</span>
+          <br>
+          <b>source : artemis</b>
+        </h6>
+      </div>
+    </a>
+    <br>
+    <br> 
+  </div>
+
+  <!-- Circle placeholder likes -->
+  <div class="col-sm-3 placeholder pad">
+    <div class="circle circle-border-blue hvr-fade shadow">
+      <span  class="score-text-top blue fa fa-facebook padding-left font-pro" aria-hidden="true"></span><br>
+      <div class="score-text blue padding-left" id="profile"></div>
+      <h6 class="score-text-bot blue padding-left score-texted">
+        <span style="font-size:24px">likes</span><br>
+        <b>source : facebook</b>
+      </h6>
+    </div>
+  </a>
+  <br>
+  <br> 
+</div>
+<style>
+            .table-hover tbody tr:hover,
+            .table-hover tbody tr:hover td,
+            .table-hover tbody tr:hover th{
+                background:rgba(8, 55, 122, 0.74902) !important;
+                color:#FFF!important;
+            }
+</style>
+<!-- Table section -->
+<div class="col-md-5" style="text-align:left;min-width:150px">
+  <div class="col-md-15 blox">
+    <table id="reservations" class="table table-hover table-responsive">
+      <thead class="th-ed">
+        <tr>
+          <th>date</th>
+          <th>imp.</th>
+          <th>clicks</th>
+          <th>visits</th>
+          <th>new visits</th>
+        </tr>
+      </thead>
+      <tbody class="tbody-ed tab-content"></tbody>
+    </table>
+  </div>
+</div>
+
+
+<!-- Chart section -->
+<div class="tab-content">
+  <div class="col-md-10 hidden-sm hidden-xs tab-pane padr" id="cli">
+    <div id="clicks" class="charted"></div>
+  </div>
+  <div class="col-md-10 hidden-sm hidden-xs tab-pane padr" id="new">
+    <div id="newvisits" class="charted"></div>
+  </div>
+  <div class="col-md-10 hidden-sm hidden-xs tab-pane active padr" id="imp">
+    <div id="impression" class="charted">
+    </div>
+  </div>
+</div>
+</div>
+</div>
+</body>
+</html>
